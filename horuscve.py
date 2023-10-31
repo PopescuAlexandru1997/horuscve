@@ -32,7 +32,7 @@ for i in range(argument_start_lib,len(sys.argv)):
 
 if (response_horus.status_code == 200):
     print_log("Response 200")
-    with open('horuscve.json','wb') as f:
+    with open('output/horuscve.json','wb') as f:
         f.write(response_horus.content)
 else:
     print_log("Response not OK")

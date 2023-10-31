@@ -1,14 +1,8 @@
 include makefile.pkg
 
-ifeq ($(LOGGING),1)
-   $(info ---------------------------LOGGING---------------------------)
-else
-	LOGGING:=0
-endif
-
 clean:
 	for i in $(OUTPUT_FILES); do \
-		if [ -a $$i ] ; \
+		if [ -f $$i ] ; \
 		then \
 			rm $$i ; \
 		fi; \

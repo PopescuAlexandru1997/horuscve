@@ -1,3 +1,15 @@
+include makefile.os
+
+ifeq ($(LOGGING),1)
+   $(info ---------------------------LOGGING---------------------------)
+else
+	LOGGING:=0
+endif
+
+ifeq ($(OS),$(Windows))
+    $(info Windows not supported yet)
+endif
+
 #Set PYTHON_ENV_VAR to your corresponding version
 PYTHON_ENV_VAR = python3
 
@@ -14,7 +26,12 @@ EXCLUDE_PACKAGES_DIRS := ntp openssl
 EXTRA_PARAMETERS := libz openssh
 
 #Do not change PACKAGES_DIRS unless you are sure about it
-PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -type d -mindepth 1 -maxdepth 1))
+ifeq ($(OS),$(Linux))
+    PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -mindepth 1 -maxdepth 1 -type d ))
+else ifeq ($(OS),$(MacOS))
+    PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -type d -mindepth 1 -maxdepth 1))
+endif
+
 PACKAGES_DIRS += $(EXTRA_PARAMETERS)
 
 #FINAL_PACKAGES_DIRS is created by removing EXCLUDE_PACKAGES_DIRS from PACKAGES_DIRS
@@ -25,15 +42,17 @@ FINAL_PACKAGES_DIRS := $(call toLowerCase,$(FINAL_PACKAGES_DIRS))
 #END_DATE is the current date(today)
 END_DATE := $(shell date +"%FT%H:%M:%S")
 
-#START_DATE is the same as END_DATE minus 30 days
-START_DATE := $(shell date  -v-30d    +"%FT%H:%M:%S")
+#START_DATE is the same as END_DATE minus 120 days
+ifeq ($(OS),$(MacOS))
+    START_DATE := $(shell date  -v-120d    +"%FT%H:%M:%S")
+else ifeq ($(OS),Linux)
+    START_DATE := $(shell date -d '120 days ago' +"%FT%H:%M:%S")
+endif
 
 #OUTPUT FILES
-OBJ_FILES := output_python.o
-API_FILES := head.out body.out
+OUTPUT_FILES := output/horuscve.json
 
-OUTPUT_FILES :=  $(OBJ_FILES)
-OUTPUT_FILES +=  $(API_FILES)
+
 
 
 
