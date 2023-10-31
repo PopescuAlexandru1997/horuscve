@@ -1,0 +1,39 @@
+#Set PYTHON_ENV_VAR to your corresponding version
+PYTHON_ENV_VAR = python3
+
+#The following line is a toLowerCase implementation so no extra software/package should be installed on the machine
+toLowerCase = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
+
+#Set PACKAGES to your paths of 3rd party software packages
+PACKAGES := example/packages example/the_other_packages
+
+#Set EXCLUDE_PACKAGES_DIRS to exclude folders from being used
+EXCLUDE_PACKAGES_DIRS := ntp openssl
+
+#Set EXTRA_PARAMETERS for any extra keyword to be searched separated by space
+EXTRA_PARAMETERS := libz openssh
+
+#Do not change PACKAGES_DIRS unless you are sure about it
+PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -type d -mindepth 1 -maxdepth 1))
+PACKAGES_DIRS += $(EXTRA_PARAMETERS)
+
+#FINAL_PACKAGES_DIRS is created by removing EXCLUDE_PACKAGES_DIRS from PACKAGES_DIRS
+FINAL_PACKAGES_DIRS := $(PACKAGES_DIRS)
+FINAL_PACKAGES_DIRS := $(filter-out $(EXCLUDE_PACKAGES_DIRS)%,$(FINAL_PACKAGES_DIRS))
+FINAL_PACKAGES_DIRS := $(call toLowerCase,$(FINAL_PACKAGES_DIRS))
+
+#END_DATE is the current date(today)
+END_DATE := $(shell date +"%FT%H:%M:%S")
+
+#START_DATE is the same as END_DATE minus 30 days
+START_DATE := $(shell date  -v-30d    +"%FT%H:%M:%S")
+
+#OUTPUT FILES
+OBJ_FILES := output_python.o
+API_FILES := head.out body.out
+
+OUTPUT_FILES :=  $(OBJ_FILES)
+OUTPUT_FILES +=  $(API_FILES)
+
+
+
