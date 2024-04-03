@@ -9,6 +9,9 @@ clean:
 		done
 
 horuscve:
+	if [ ! -d "./output" ];then     \
+		mkdir output;           \
+	fi
 	$(PYTHON_ENV_VAR) horuscve.py $(LOGGING) $(START_DATE) $(END_DATE) $(FINAL_PACKAGES_DIRS)
 
 mydebug:
