@@ -30,6 +30,8 @@ ifeq ($(OS),$(Linux))
     PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -mindepth 1 -maxdepth 1 -type d ))
 else ifeq ($(OS),$(MacOS))
     PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -type d -mindepth 1 -maxdepth 1))
+else ifeq (,$(wsl,$(OS)))
+    PACKAGES_DIRS := $(notdir $(shell find $(PACKAGES) -mindepth 1 -maxdepth 1 -type d ))
 endif
 
 PACKAGES_DIRS += $(EXTRA_PARAMETERS)
