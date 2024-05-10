@@ -2,7 +2,9 @@ import requests
 import json
 import time
 from datetime import datetime #for ISO8601  datetimeformat
-import sys
+import os,sys
+
+OUTPUT_DIR = 'output'
 
 def print_log(string):
     if(logging == '1'):
@@ -18,7 +20,8 @@ print_log("HORUSCVE APP STARTED")
 print_log(pubStartDate)
 print_log(pubEndDate)
 
-today_date = datetime.now().replace(microsecond=0)
+today_date = f"{datetime.now():%Y-%m-%d_%H-%M-%S}"
+print(f"Current time: {today_date}")   #print is used instead of print_log for file tracability purposes
 string_api_horus = 'http://www.horuscve.org/api/vulnerabilities/date-range?startDate='+pubStartDate+'&endDate='+pubEndDate
 print_log(string_api_horus)
 
@@ -32,8 +35,12 @@ for i in range(argument_start_lib,len(sys.argv)):
 
 if (response_horus.status_code == 200):
     print_log("Response 200")
-    with open('output/horuscve.json','wb') as f:
+    if not os.path.exists(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
+    output_file = os.path.join(OUTPUT_DIR, f"horuscve_{today_date}.json")
+    with open(output_file,'wb') as f:
         f.write(response_horus.content)
+        f.close()
 else:
     print_log("Response not OK")
 
@@ -51,5 +58,4 @@ for i in range(0, len(vuln)-1):
 print_log("--------------------------------")
 
 
-print(time.ctime())
 print_log("HORUSCVE APP FINISHED")
